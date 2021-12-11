@@ -20,7 +20,7 @@ function checksExistsUserAccount(request, response, next) {
     return response.status(404).json({ error: "User not found !"});
   }
 
-  resquest.user = exist;
+  request.user = exist;
 
   next();
 }
@@ -33,7 +33,31 @@ function checksCreateTodosUserAvailability(request, response, next) {
 }
 
 function checksTodoExists(request, response, next) {
-  // Complete aqui
+  // Codígo de resolução.
+  const { username } = request.headers;
+  const { id } = request.params;
+
+
+  if(!validate(id)) {
+    return response.status(400).json({ error: "Id not a uuid !, please give a valid uuid"});
+  }
+
+  const index = users.findIndex(user => user.username === username);
+
+  if(index === -1) {
+    return response.status(404).json({ error: "User not found !"});
+  }
+
+  const todo = users[index].todos.find(todo => todo.id === id);
+
+  if(!todo) {
+    return response.status(404).json({ error: "Todo not found !"});
+  }
+
+  request.user = users[index];
+  request.todo = todo;
+
+  next();
 }
 
 function findUserById(request, response, next) {
