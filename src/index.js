@@ -27,9 +27,13 @@ function checksExistsUserAccount(request, response, next) {
 
 function checksCreateTodosUserAvailability(request, response, next) {
   // Codígo de resolução.
+  const { user } = request;
 
+  if((user.pro === false) && (user.todos.length >= 10)) {
+    return response.status(403).json({error: 'Please assign the pro plan !'})
+  }
 
-
+  next();
 }
 
 function checksTodoExists(request, response, next) {
